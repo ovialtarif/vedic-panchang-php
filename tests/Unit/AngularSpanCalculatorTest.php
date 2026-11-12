@@ -14,11 +14,11 @@ final class AngularSpanCalculatorTest extends TestCase
         // 350 degrees at JD 100, increasing 10 degrees per day.
         $angle = static fn (float $jd): float => fmod(350.0 + (($jd - 100.0) * 10.0), 360.0);
 
-        $spans = AngularSpanCalculator::spansOver($angle, 12.0, 100.0, 101.0, 2.0);
+        $spans = AngularSpanCalculator::spansOver($angle, 12.0, 100.0, 101.1, 2.0);
 
         self::assertSame(29, $spans[0]->index);
-        self::assertEqualsWithDelta(99.0, $spans[0]->startJulianDay, 1.0e-8);
-        self::assertEqualsWithDelta(100.2, $spans[0]->endJulianDay, 1.0e-8);
+        self::assertEqualsWithDelta(99.8, $spans[0]->startJulianDay, 1.0e-8);
+        self::assertEqualsWithDelta(101.0, $spans[0]->endJulianDay, 1.0e-8);
         self::assertGreaterThanOrEqual(2, count($spans));
     }
 
