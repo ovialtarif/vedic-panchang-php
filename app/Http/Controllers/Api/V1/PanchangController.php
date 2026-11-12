@@ -15,13 +15,19 @@ final class PanchangController
     {
         $validated = $request->validate([
             'date' => ['sometimes', 'date_format:Y-m-d'],
-            'city_id' => ['prohibited_with:lat,lon,tz'],
+            'city_id' => ['sometimes', 'string', 'max:32'],
             'lat' => ['required_without:city_id', 'numeric', 'between:-90,90'],
             'lon' => ['required_with:lat', 'numeric', 'between:-180,180'],
             'tz' => ['required_with:lat', 'timezone'],
             'alt' => ['sometimes', 'numeric', 'between:-500,9000'],
             'profile' => ['sometimes', 'string', 'in:north-indian-smarta'],
         ]);
+
+        if (isset($validated['city_id']) && $request->hasAny(['lat', 'lon', 'tz'])) {
+            throw ValidationException::withMessages([
+                'city_id' => 'Use either city_id or coordinates, not both.',
+            ]);
+        }
 
         if (isset($validated['city_id'])) {
             return $this->enginePending('daily-city', $validated);
