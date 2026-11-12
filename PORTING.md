@@ -22,6 +22,7 @@ This repository began as a fork of [pradeepsattikar/vedic-panchang-api](https://
 8. Navagraha positions (Sun, Moon, Mars, Mercury, Jupiter, Venus, Saturn, Rahu and Ketu), retrograde flags and Lahiri sidereal ascendant calculation.
 9. Julian Day conversion and timezone-aware local civil-day boundaries, including daylight-saving transitions.
 10. Amanta and Purnimanta lunar month naming, including Adhika month detection from consecutive new moons and solar sign transitions.
+11. Sunrise/sunset-derived Rahu Kalam, Yamaganda, Gulika Kalam, Abhijit Muhurta and Brahma Muhurta intervals.
 
 ## In progress
 
