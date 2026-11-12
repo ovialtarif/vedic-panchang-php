@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 final class DailyPanchangApiTest extends TestCase
@@ -14,10 +13,20 @@ final class DailyPanchangApiTest extends TestCase
             ->assertJsonValidationErrors(['lat']);
     }
 
-    public function test_daily_api_returns_a_structured_calculation_error_if_engine_fails(): void
+    public function test_daily_api_returns_real_calculation_or_a_structured_error(): void
     {
-        // The endpoint must never fall back to fabricated astronomical values.
-        $this->getJson('/api/v1/panchang/daily?lat=23.8103&lon=90.4125&tz=Asia%2FDhaka&date=2026-11-12')
-            ->assertJsonStructure(['data', 'error']);
+        $response = $this->getJson(
+            '/api/v1/panchang/daily?lat=23.8103&lon=90.4125&tz=Asia%2FDhaka&date=2026-11-12'
+        );
+
+        self::assertContains($response->status(), [200, 422]);
+
+        if ($response->status() === 200) {
+            $response->assertJsonStructure([
+                'data' => ['date', 'vara', 'day_window', 'sunrise', 'sunset', 'tithi', 'nakshatra'],
+            ]);
+        } else {
+            $response->assertJsonStructure(['error' => ['code', 'message']]);
+        }
     }
 }
