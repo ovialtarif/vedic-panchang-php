@@ -13,14 +13,17 @@ This repository began as a fork of [pradeepsattikar/vedic-panchang-api](https://
 ## Completed
 
 1. Laravel 13 application bootstrap and API route registration.
-2. PHP 8.3+ Composer constraints and Windows/Linux/macOS Swiss Ephemeris FFI dependency.
+2. PHP 8.3+ Composer constraints and Swiss Ephemeris FFI dependency.
 3. Swiss Ephemeris adapter for Lahiri sidereal Sun/Moon longitudes and rise/set queries.
-4. Initial angular Panchang primitives and unit tests.
+4. Initial angular Panchang primitives.
+5. Upstream-compatible cyclic angular span search with bisection boundary refinement.
+6. Canonical names and index calculations for Tithi, Nakshatra, Yoga, Karana and Rashi.
+7. Unit tests for the mathematical primitives and cyclic span boundary finder.
 
 ## In progress
 
-- Full sunrise-to-next-sunrise daily Panchang calculation.
-- Tithi, Nakshatra, Yoga and Karana time spans using boundary search.
+- Full sunrise-to-next-sunrise daily Panchang calculation and serialization.
+- Local civil-date boundaries and rise/set event handling for all locations.
 - Graha positions, lunar masa, day timings and local-time conversion.
 - City catalogue import/search, festival and muhurta rule engines.
 - API response parity and regression fixtures.

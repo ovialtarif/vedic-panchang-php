@@ -42,7 +42,7 @@ The Swiss Ephemeris FFI package detects Windows x64 and loads its bundled native
 
 ## Calculation status
 
-The Swiss Ephemeris PHP FFI adapter is now wired into Laravel for Lahiri sidereal Sun/Moon longitudes and rise/set event queries. The complete daily Panchang orchestration, city catalogue, festival rules and response parity are still being ported and validated. Until then, Panchang endpoints intentionally return HTTP 503 rather than invented timings.
+The Swiss Ephemeris adapter provides Lahiri sidereal Sun/Moon longitudes and rise/set queries. The cyclic span engine now calculates segment boundary instants for Panchang angles, and the core Tithi, Nakshatra, Yoga, Karana and Rashi naming/index rules are implemented. Full daily orchestration, city catalogue, festival rules and response parity remain in progress. Until those are validated, daily Panchang endpoints intentionally return HTTP 503 rather than invented timings.
 
 ## Licensing
 
