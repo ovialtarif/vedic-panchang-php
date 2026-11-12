@@ -19,10 +19,12 @@ This repository began as a fork of [pradeepsattikar/vedic-panchang-api](https://
 5. Upstream-compatible cyclic angular span search with bisection boundary refinement.
 6. Canonical names and index calculations for Tithi, Nakshatra, Yoga, Karana and Rashi.
 7. Unit tests for the mathematical primitives and cyclic span boundary finder.
+8. Navagraha positions (Sun, Moon, Mars, Mercury, Jupiter, Venus, Saturn, Rahu and Ketu), retrograde flags and Lahiri sidereal ascendant calculation.
+9. Julian Day conversion and timezone-aware local civil-day boundaries, including daylight-saving transitions.
 
 ## In progress
 
-- Full sunrise-to-next-sunrise daily Panchang calculation and serialization.
+- Full sunrise-to-next-sunrise daily Panchang calculation and serialization using the new date and astronomy primitives.
 - Local civil-date boundaries and rise/set event handling for all locations.
 - Graha positions, lunar masa, day timings and local-time conversion.
 - City catalogue import/search, festival and muhurta rule engines.
