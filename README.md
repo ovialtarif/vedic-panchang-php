@@ -42,7 +42,7 @@ The Swiss Ephemeris FFI package detects the operating system and loads its bundl
 
 ## Calculation status
 
-The Swiss Ephemeris adapter provides Lahiri sidereal Sun/Moon longitudes and rise/set queries. The cyclic span engine now calculates segment boundary instants for Panchang angles; Tithi, Nakshatra, Yoga, Karana and Rashi naming/index rules are implemented; Navagraha positions, timezone-aware Julian Day helpers and Amanta/Purnimanta lunar month classification (including Adhika month detection) and sunrise/sunset-derived auspicious/inauspicious day-period calculations are available. Coordinate-based daily Panchang orchestration is now wired into the daily API. City catalogue, month/festival endpoints, shubh yoga parity and response-fixture validation remain in progress. Until those are validated, daily Panchang endpoints intentionally return HTTP 503 rather than invented timings.
+The Swiss Ephemeris adapter, angular span engine, Tithi/Nakshatra/Yoga/Karana/Rashi naming, Navagraha calculations, lunar month classification and day-timing calculations are implemented. Coordinate-based `/api/v1/panchang/daily` requests are wired to the calculator, but its output has not yet passed full upstream fixture/parity validation. Calculation exceptions return a generic HTTP 422 response rather than fabricated values. City-ID daily requests and the month, festival and city catalogue endpoints still return HTTP 503 while their PHP implementations are being completed.
 
 ## Licensing
 
