@@ -2,24 +2,59 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Services\VedicPanchang\DailyPanchangCalculator;
+use DateTimeImmutable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use Throwable;
 
 final class PanchangController
 {
-    public function daily(Request $request): JsonResponse
+    public function daily(Request $request, DailyPanchangCalculator $calculator): JsonResponse
     {
         $validated = $request->validate([
             'date' => ['sometimes', 'date_format:Y-m-d'],
-            'city_id' => ['required_without:lat', 'string', 'max:32'],
+            'city_id' => ['prohibited_with:lat,lon,tz'],
             'lat' => ['required_without:city_id', 'numeric', 'between:-90,90'],
             'lon' => ['required_with:lat', 'numeric', 'between:-180,180'],
             'tz' => ['required_with:lat', 'timezone'],
-            'alt' => ['sometimes', 'numeric', 'between:-500,10000'],
+            'alt' => ['sometimes', 'numeric', 'between:-500,9000'],
             'profile' => ['sometimes', 'string', 'in:north-indian-smarta'],
         ]);
 
-        return $this->enginePending('daily', $validated);
+        if (isset($validated['city_id'])) {
+            return $this->enginePending('daily-city', $validated);
+        }
+
+        $timezone = $validated['tz'];
+        $date = $validated['date'] ?? (new DateTimeImmutable('now', new \DateTimeZone($timezone)))->format('Y-m-d');
+
+        try {
+            $data = $calculator->calculate(
+                $date,
+                [
+                    'latitude' => (float) $validated['lat'],
+                    'longitude' => (float) $validated['lon'],
+                    'altitude_m' => (float) ($validated['alt'] ?? 0.0),
+                ],
+                $timezone,
+                $validated['profile'] ?? 'north-indian-smarta',
+            );
+
+            return response()->json(['data' => $data]);
+        } catch (ValidationException $exception) {
+            throw $exception;
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return response()->json([
+                'error' => [
+                    'code' => 'panchang_calculation_failed',
+                    'message' => 'The Panchang calculation could not be completed for this date and location.',
+                ],
+            ], 422);
+        }
     }
 
     public function month(Request $request): JsonResponse

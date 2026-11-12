@@ -42,7 +42,7 @@ The Swiss Ephemeris FFI package detects Windows x64 and loads its bundled native
 
 ## Calculation status
 
-The Swiss Ephemeris adapter provides Lahiri sidereal Sun/Moon longitudes and rise/set queries. The cyclic span engine now calculates segment boundary instants for Panchang angles; Tithi, Nakshatra, Yoga, Karana and Rashi naming/index rules are implemented; Navagraha positions, timezone-aware Julian Day helpers and Amanta/Purnimanta lunar month classification (including Adhika month detection) and sunrise/sunset-derived auspicious/inauspicious day-period calculations are available. Full daily orchestration, city catalogue, festival rules and response parity remain in progress. Until those are validated, daily Panchang endpoints intentionally return HTTP 503 rather than invented timings.
+The Swiss Ephemeris adapter provides Lahiri sidereal Sun/Moon longitudes and rise/set queries. The cyclic span engine now calculates segment boundary instants for Panchang angles; Tithi, Nakshatra, Yoga, Karana and Rashi naming/index rules are implemented; Navagraha positions, timezone-aware Julian Day helpers and Amanta/Purnimanta lunar month classification (including Adhika month detection) and sunrise/sunset-derived auspicious/inauspicious day-period calculations are available. Coordinate-based daily Panchang orchestration is now wired into the daily API. City catalogue, month/festival endpoints, shubh yoga parity and response-fixture validation remain in progress. Until those are validated, daily Panchang endpoints intentionally return HTTP 503 rather than invented timings.
 
 ## Licensing
 

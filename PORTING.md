@@ -12,6 +12,8 @@ This repository began as a fork of [pradeepsattikar/vedic-panchang-api](https://
 
 ## Completed
 
+8. Daily Panchang orchestration for coordinate-based requests: sunrise/sunset, moonrise/moonset, sunrise-to-next-sunrise fallback, element spans, Vara, Masa, year info, grahas and day timings.
+
 1. Laravel 13 application bootstrap and API route registration.
 2. PHP 8.3+ Composer constraints and Swiss Ephemeris FFI dependency.
 3. Swiss Ephemeris adapter for Lahiri sidereal Sun/Moon longitudes and rise/set queries.
