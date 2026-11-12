@@ -21,6 +21,7 @@ This repository began as a fork of [pradeepsattikar/vedic-panchang-api](https://
 7. Unit tests for the mathematical primitives and cyclic span boundary finder.
 8. Navagraha positions (Sun, Moon, Mars, Mercury, Jupiter, Venus, Saturn, Rahu and Ketu), retrograde flags and Lahiri sidereal ascendant calculation.
 9. Julian Day conversion and timezone-aware local civil-day boundaries, including daylight-saving transitions.
+10. Amanta and Purnimanta lunar month naming, including Adhika month detection from consecutive new moons and solar sign transitions.
 
 ## In progress
 
