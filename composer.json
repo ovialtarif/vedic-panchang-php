@@ -1,0 +1,44 @@
+{
+  "$schema": "https://getcomposer.org/schema.json",
+  "name": "ovialtarif/vedic-panchang-php",
+  "type": "project",
+  "description": "Laravel-based PHP port of the Vedic Panchang API.",
+  "keywords": [
+    "laravel",
+    "vedic",
+    "panchang",
+    "astronomy",
+    "api"
+  ],
+  "license": "AGPL-3.0-or-later",
+  "require": {
+    "php": "^8.3",
+    "laravel/framework": "^13.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^12.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "@php artisan package:discover --ansi"
+    ],
+    "test": "@php artisan test"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
