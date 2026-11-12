@@ -34,7 +34,7 @@
     "post-autoload-dump": [
       "@php artisan package:discover --ansi"
     ],
-    "test": "@php artisan test",
+    "test": "vendor/bin/phpunit",
     "format": "vendor/bin/pint"
   },
   "config": {
