@@ -9,7 +9,7 @@
     "php": "^8.3",
     "ext-ffi": "*",
     "laravel/framework": "^13.0",
-    "jayeshmepani/swiss-ephemeris-ffi": "^1.1"
+    "jayeshmepani/swiss-ephemeris-ffi": "^1.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^12.0"
