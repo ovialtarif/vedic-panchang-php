@@ -5,22 +5,26 @@ This repository began as a fork of [pradeepsattikar/vedic-panchang-api](https://
 ## Porting principles
 
 - Preserve the upstream AGPL-3.0-or-later license and attribution.
-- Port the calculation rules; do not proxy to the Python API or invent timings.
+- Port calculation rules; do not proxy to the Python API or invent timings.
 - Keep astronomy behind an adapter so the ephemeris implementation can be tested independently.
 - Match upstream JSON fields and time semantics before declaring endpoint parity.
-- Verify against the upstream Drik Panchang reference fixtures and edge cases.
+- Verify against upstream Drik Panchang reference fixtures and edge cases.
 
-## Milestones
+## Completed
 
-1. Laravel 13 API skeleton, request validation, metadata, and angular Panchang primitives.
-2. Swiss Ephemeris PHP integration and Julian-day / timezone calculations.
-3. Sunrise, sunset, moonrise, moonset and daily Tithi/Nakshatra/Yoga/Karana spans.
-4. Rahu Kalam, Yamaganda, Gulika, Abhijit and Brahma Muhurta.
-5. Amanta/Purnimanta masa, festival rules, city catalogue and search.
-6. Reference parity tests, edge cases, API documentation and deployment hardening.
+1. Laravel 13 application bootstrap and API route registration.
+2. PHP 8.3+ Composer constraints and Windows/Linux/macOS Swiss Ephemeris FFI dependency.
+3. Swiss Ephemeris adapter for Lahiri sidereal Sun/Moon longitudes and rise/set queries.
+4. Initial angular Panchang primitives and unit tests.
 
-## Current status
+## In progress
 
-The Laravel API skeleton and basic angular primitives are committed. Astronomy-dependent endpoints deliberately return HTTP 503 until a verified ephemeris adapter is available. This prevents plausible-looking but inaccurate Panchang output.
+- Full sunrise-to-next-sunrise daily Panchang calculation.
+- Tithi, Nakshatra, Yoga and Karana time spans using boundary search.
+- Graha positions, lunar masa, day timings and local-time conversion.
+- City catalogue import/search, festival and muhurta rule engines.
+- API response parity and regression fixtures.
 
-The original Python source and upstream tests are retained for reference during the port. They are not executed by the Laravel application.
+## Accuracy and release policy
+
+The API must not publish a complete Panchang response until calculations match the upstream reference fixtures. Incomplete astronomy-dependent endpoints deliberately return HTTP 503. A successful HTTP response must never contain guessed sunrise, moonrise or Panchang timings.

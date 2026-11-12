@@ -6,11 +6,11 @@ The target is a deterministic Panchang API for any date and location, including 
 
 ## Requirements
 
-- PHP 8.3+
+- PHP 8.3 or newer in the PHP 8.x line
 - Composer 2
 - Laravel 13
-- MySQL 8+ (for persistent city catalogue / optional caching)
-- PHP extensions: ctype, curl, dom, fileinfo, filter, hash, mbstring, openssl, pcre, PDO, tokenizer, xml
+- PHP extensions: FFI (enabled), ctype, curl, dom, fileinfo, filter, hash, mbstring, openssl, pcre, PDO, tokenizer, xml
+- Swiss Ephemeris FFI package (installed by Composer)
 
 ## Local setup (Laragon / Windows)
 
@@ -20,14 +20,12 @@ cd vedic-panchang-php
 composer install
 copy .env.example .env
 php artisan key:generate
-```
-
-Configure database credentials in `.env`, then run:
-
-```bash
-php artisan migrate
 php artisan serve
 ```
+
+Enable the FFI extension in the PHP configuration used by Laragon. For local development, set `ffi.enable=true` in the active `php.ini`, restart Laragon, and verify with `php -m`.
+
+The Swiss Ephemeris FFI package detects Windows x64 and loads its bundled native library. You can override it with `VP_SWISSEPH_LIBRARY_PATH`. Optional ephemeris data files can be configured with `VP_EPHEMERIS_PATH`; the current adapter uses the built-in Moshier ephemeris and does not require external data files.
 
 ## API routes
 
@@ -40,14 +38,12 @@ php artisan serve
 - `GET /api/v1/cities/nearest`
 - `GET /api/v1/cities/{city}`
 
-`GET /up` is Laravel's health endpoint when enabled in the application skeleton.
+`GET /up` is Laravel's health endpoint.
 
-> **Porting notice:** The HTTP skeleton and initial angular primitives are in place. Astronomy-dependent routes return HTTP 503 until the Swiss Ephemeris adapter and validated calculations are complete. The API never returns guessed sunrise, moonrise or Panchang timings.
+## Calculation status
 
-## Compatibility goals
+The Swiss Ephemeris PHP FFI adapter is now wired into Laravel for Lahiri sidereal Sun/Moon longitudes and rise/set event queries. The complete daily Panchang orchestration, city catalogue, festival rules and response parity are still being ported and validated. Until then, Panchang endpoints intentionally return HTTP 503 rather than invented timings.
 
-The port will preserve the upstream API's response semantics, ISO-8601 local timestamps with UTC offsets, explicit no-event statuses, tradition profiles and supported date range. See [PORTING.md](PORTING.md) for milestones.
+## Licensing
 
-## License and attribution
-
-This project is derived from Vedic Panchang API by Pradeep Sattikar and retains its **AGPL-3.0-or-later** licensing. See [LICENSE](LICENSE) and [NOTICE](NOTICE). Swiss Ephemeris and GeoNames data retain their respective upstream licensing and attribution requirements.
+This project is derived from Vedic Panchang API by Pradeep Sattikar and retains its **AGPL-3.0-or-later** licensing. Swiss Ephemeris is also distributed under Astrodienst's AGPL or professional-license terms. Review the upstream terms before commercial or closed-source deployment. See [LICENSE](LICENSE) and [NOTICE](NOTICE).
