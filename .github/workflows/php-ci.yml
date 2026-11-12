@@ -8,6 +8,8 @@ on:
 
 jobs:
   tests:
+    env:
+      SWISSEPH_LIBS_RELEASE: download/v1.1.1
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

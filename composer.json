@@ -3,7 +3,13 @@
   "name": "ovialtarif/vedic-panchang-php",
   "type": "project",
   "description": "Laravel 13 PHP port of the Vedic Panchang API.",
-  "keywords": ["laravel", "vedic", "panchang", "astronomy", "api"],
+  "keywords": [
+    "laravel",
+    "vedic",
+    "panchang",
+    "astronomy",
+    "api"
+  ],
   "license": "AGPL-3.0-or-later",
   "require": {
     "php": "^8.3",
@@ -25,7 +31,9 @@
     }
   },
   "scripts": {
-    "post-autoload-dump": ["@php artisan package:discover --ansi"],
+    "post-autoload-dump": [
+      "@php artisan package:discover --ansi"
+    ],
     "test": "@php artisan test",
     "format": "vendor/bin/pint"
   },
@@ -35,5 +43,11 @@
     "sort-packages": true
   },
   "minimum-stability": "stable",
-  "prefer-stable": true
+  "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/jayeshmepani/Swiss-Ephemeris-PHP"
+    }
+  ]
 }

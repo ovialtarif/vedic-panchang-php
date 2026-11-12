@@ -25,7 +25,7 @@ php artisan serve
 
 Enable the FFI extension in the PHP configuration used by Laragon. For local development, set `ffi.enable=true` in the active `php.ini`, restart Laragon, and verify with `php -m`.
 
-The Swiss Ephemeris FFI package detects Windows x64 and loads its bundled native library. You can override it with `VP_SWISSEPH_LIBRARY_PATH`. Optional ephemeris data files can be configured with `VP_EPHEMERIS_PATH`; the current adapter uses the built-in Moshier ephemeris and does not require external data files.
+The Swiss Ephemeris FFI package detects the operating system and loads its bundled native library. Its binary release is pinned to v1.1.1 (`SWISSEPH_LIBS_RELEASE=download/v1.1.1`) because the upstream `latest` release currently points to ephemeris data files rather than platform binaries. You can override it with `VP_SWISSEPH_LIBRARY_PATH`. Optional ephemeris data files can be configured with `VP_EPHEMERIS_PATH`; the current adapter uses the built-in Moshier ephemeris and does not require external data files.
 
 ## API routes
 
