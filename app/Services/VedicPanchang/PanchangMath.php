@@ -88,7 +88,7 @@ final class PanchangMath
         $index = min(26, (int) floor(self::normalizeDegrees($sunLongitude + $moonLongitude) / $segment));
         $name = self::YOGA_NAMES[$index];
 
-        return ['number' => $index + 1, 'name' => $name, 'id' => strtolower($name)];
+        return ['number' => $index + 1, 'name' => $name, 'id' => strtolower(str_replace(' ', '-', $name))];
     }
 
     public static function karana(float $sunLongitude, float $moonLongitude): array

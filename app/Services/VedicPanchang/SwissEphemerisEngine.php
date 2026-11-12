@@ -43,6 +43,85 @@ final class SwissEphemerisEngine implements AstronomyEngine
     }
 
     /**
+     * @return array{longitude: float, speed: float} Sidereal longitude and degrees/day.
+     */
+    public function siderealLongitudeAndSpeed(DateTimeImmutable $instant, int $body): array
+    {
+        $this->swiss->swe_set_sid_mode(self::SIDEREAL_LAHIRI, 0.0, 0.0);
+
+        $ffi = $this->swiss->getFFI();
+        $values = $ffi->new('double[6]');
+        $error = $ffi->new('char[256]');
+        $flags = self::EPHEMERIS_MOSEPH
+            | SwissEphFFI::SEFLG_SIDEREAL
+            | SwissEphFFI::SEFLG_SPEED;
+
+        $result = $this->swiss->swe_calc_ut(self::julianDay($instant), $body, $flags, $values, $error);
+
+        if ($result < 0) {
+            $message = $ffi->string($error);
+            throw new RuntimeException('Swiss Ephemeris calculation error: '.($message ?: 'unknown error'));
+        }
+
+        return [
+            'longitude' => PanchangMath::normalizeDegrees((float) $values[0]),
+            'speed' => (float) $values[3],
+        ];
+    }
+
+    /** @return array{longitude: float, distance_au: float} Tropical geocentric position. */
+    public function tropicalPlanetPosition(DateTimeImmutable $instant, int $body): array
+    {
+        $ffi = $this->swiss->getFFI();
+        $values = $ffi->new('double[6]');
+        $error = $ffi->new('char[256]');
+        $result = $this->swiss->swe_calc_ut(
+            self::julianDay($instant),
+            $body,
+            self::EPHEMERIS_MOSEPH,
+            $values,
+            $error,
+        );
+
+        if ($result < 0) {
+            $message = $ffi->string($error);
+            throw new RuntimeException('Swiss Ephemeris calculation error: '.($message ?: 'unknown error'));
+        }
+
+        return [
+            'longitude' => PanchangMath::normalizeDegrees((float) $values[0]),
+            'distance_au' => (float) $values[2],
+        ];
+    }
+
+    public function siderealAscendant(
+        DateTimeImmutable $instant,
+        float $latitude,
+        float $longitude,
+    ): float {
+        $this->swiss->swe_set_sid_mode(self::SIDEREAL_LAHIRI, 0.0, 0.0);
+
+        $ffi = $this->swiss->getFFI();
+        $cusps = $ffi->new('double[13]');
+        $ascmc = $ffi->new('double[10]');
+        $status = $this->swiss->swe_houses_ex(
+            self::julianDay($instant),
+            SwissEphFFI::SEFLG_SIDEREAL,
+            $latitude,
+            $longitude,
+            ord('W'),
+            $cusps,
+            $ascmc,
+        );
+
+        if ($status < 0) {
+            throw new RuntimeException('Swiss Ephemeris could not calculate the ascendant for this location.');
+        }
+
+        return PanchangMath::normalizeDegrees((float) $ascmc[0]);
+    }
+
+    /**
      * Return the next rise/set Julian day (UT), or null when no event occurs.
      *
      * @param array{longitude: float, latitude: float, altitude_m?: float} $location
