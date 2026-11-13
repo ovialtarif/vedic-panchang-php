@@ -7,6 +7,9 @@ use RuntimeException;
 
 final class CityRepository
 {
+    /** @var list<array<string, mixed>>|null */
+    private ?array $cachedCities = null;
+
     public function __construct(private readonly ?string $cataloguePath = null)
     {
     }
@@ -14,6 +17,10 @@ final class CityRepository
     /** @return list<array<string, mixed>> */
     public function all(): array
     {
+        if ($this->cachedCities !== null) {
+            return $this->cachedCities;
+        }
+
         $path = $this->cataloguePath ?? base_path('database/data/cities.csv');
 
         if (! is_file($path) || ! is_readable($path)) {
@@ -50,7 +57,7 @@ final class CityRepository
                 $cities[] = $city;
             }
 
-            return $cities;
+            return $this->cachedCities = $cities;
         } finally {
             fclose($handle);
         }
