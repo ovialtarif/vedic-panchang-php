@@ -18,6 +18,6 @@ final class MetaApiTest extends TestCase
     {
         $this->getJson('/api/v1/panchang/daily?city_id=1275339')
             ->assertStatus(503)
-            ->assertJsonPath('error.code', 'calculation_engine_not_ready');
+            ->assertJsonPath('error.code', 'city_catalogue_unavailable');
     }
 }
