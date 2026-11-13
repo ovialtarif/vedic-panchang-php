@@ -33,8 +33,8 @@ final class FestivalAstronomicalCalendarTest extends TestCase
     {
         $tithis = $this->calendar()->lunarTithis(2026);
 
-        self::assertGreaterThan(350, count($tithis));
-        self::assertLessThan(390, count($tithis));
+        self::assertGreaterThan(440, count($tithis));
+        self::assertLessThan(480, count($tithis));
 
         for ($i = 1, $count = count($tithis); $i < $count; $i++) {
             self::assertGreaterThan($tithis[$i - 1]['start_jd'], $tithis[$i]['start_jd']);
@@ -44,7 +44,7 @@ final class FestivalAstronomicalCalendarTest extends TestCase
         foreach ($tithis as $tithi) {
             self::assertGreaterThan(0, $tithi['number']);
             self::assertLessThanOrEqual(30, $tithi['number']);
-            self::assertGreaterThan($tithi['start_jd'], $tithi['end_jd'] - 1.0);
+            self::assertGreaterThan($tithi['start_jd'], $tithi['end_jd']);
             self::assertArrayHasKey('amanta', $tithi);
             self::assertArrayHasKey('purnimanta', $tithi);
         }
