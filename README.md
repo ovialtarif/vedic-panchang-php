@@ -40,7 +40,7 @@ This downloads the GeoNames dataset and requires the PHP ZipArchive extension an
 
 ## Festival rule port
 
-The PHP code now includes a validated loader for the upstream North Indian Smarta TOML rule set and a deterministic observance-day selector. The selector applies kala coverage, first/second/maximum-coverage tie breaks, Udaya Tithi fallback, and optional Bhadra interval exclusion. These are tested independently; the full astronomical festival occurrence engine and festival HTTP endpoints are still pending.
+The PHP code now includes a validated loader for the upstream North Indian Smarta TOML rule set, annual Tithi/Sankranti astronomy, lunar/solar rule matching, and a deterministic observance-day selector. The selector applies kala coverage, first/second/maximum-coverage tie breaks, Udaya Tithi fallback, and optional Bhadra interval exclusion. These layers are tested independently; location-specific sunrise/moonrise frames, puja recipes, occurrence assembly, and festival HTTP endpoints are still pending.
 
 ## API routes
 
