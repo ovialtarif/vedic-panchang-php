@@ -18,7 +18,6 @@ use InvalidArgumentException;
 final class FestivalAstronomicalCalendar
 {
     private const YEAR_MARGIN_DAYS = 45.0;
-    private const MEAN_SYNODIC_MONTH_DAYS = 29.530589;
     private const MEAN_SUN_SPEED = 0.9856;
 
     public function __construct(private readonly AstronomyEngine $ephemeris)
