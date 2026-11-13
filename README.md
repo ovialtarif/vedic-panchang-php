@@ -38,6 +38,10 @@ php scripts/build_city_catalogue.php
 
 This downloads the GeoNames dataset and requires the PHP ZipArchive extension and internet access. The generated CSV is intentionally not committed to the repository. GeoNames data is licensed under CC BY 4.0; attribution is recorded in [NOTICE](NOTICE).
 
+## Festival rule port
+
+The PHP code now includes a validated loader for the upstream North Indian Smarta TOML rule set and a deterministic observance-day selector. The selector applies kala coverage, first/second/maximum-coverage tie breaks, Udaya Tithi fallback, and optional Bhadra interval exclusion. These are tested independently; the full astronomical festival occurrence engine and festival HTTP endpoints are still pending.
+
 ## API routes
 
 - `GET /api/v1/meta`
