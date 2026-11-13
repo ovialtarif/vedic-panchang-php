@@ -1,9 +1,9 @@
 <?php
 
-namespace Tests\\Feature;
+namespace Tests\Feature;
 
-use App\\Services\\VedicPanchang\\Cities\\CityRepository;
-use Tests\\TestCase;
+use App\Services\VedicPanchang\Cities\CityRepository;
+use Tests\TestCase;
 
 final class CityRepositoryTest extends TestCase
 {
