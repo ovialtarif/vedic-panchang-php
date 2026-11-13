@@ -42,9 +42,9 @@ This downloads the GeoNames dataset and requires the PHP ZipArchive extension an
 
 - `GET /api/v1/meta`
 - `GET /api/v1/panchang/daily` (coordinates or `city_id`)
-- `GET /api/v1/panchang/month` (port pending)
-- `GET /api/v1/festivals` (port pending)
-- `GET /api/v1/festivals/{festival}` (port pending)
+- `GET /api/v1/panchang/month` (full daily Panchang entries for each date in a Gregorian month; requires city catalogue)
+- `GET /api/v1/festivals` (festival engine port pending)
+- `GET /api/v1/festivals/{festival}` (festival engine port pending)
 - `GET /api/v1/cities?q=Dhaka&country=BD`
 - `GET /api/v1/cities/nearest?lat=23.81&lon=90.41`
 - `GET /api/v1/cities/{city}`
@@ -53,7 +53,7 @@ This downloads the GeoNames dataset and requires the PHP ZipArchive extension an
 
 ## Calculation status
 
-The Swiss Ephemeris adapter, angular span engine, Tithi/Nakshatra/Yoga/Karana/Rashi naming, Navagraha calculations, lunar month classification and day-timing calculations are implemented. City search, city detail, nearest-city lookup and city-ID daily calculation are implemented and require the generated GeoNames catalogue. Coordinate-based `/api/v1/panchang/daily` requests are wired to the calculator, but output has not yet passed full upstream fixture/parity validation. Month and festival endpoints remain incomplete. Calculation exceptions return a generic HTTP 422 response rather than fabricated values.
+The Swiss Ephemeris adapter, angular span engine, Tithi/Nakshatra/Yoga/Karana/Rashi naming, Navagraha calculations, lunar month classification and day-timing calculations are implemented. City search, city detail, nearest-city lookup and city-ID daily calculation are implemented and require the generated GeoNames catalogue. Coordinate-based `/api/v1/panchang/daily` requests are wired to the calculator, but output has not yet passed full upstream fixture/parity validation. The monthly endpoint now composes a complete month from daily calculations and returns no partial calendar if any day fails. Festival calculation, festival detail, and festival-aware month annotations remain incomplete. Calculation exceptions return a generic HTTP 422 response rather than fabricated values.
 
 ## Licensing
 
