@@ -1,14 +1,14 @@
 <?php
 
-namespace App\\Http\\Controllers\\Api\\V1;
+namespace App\Http\Controllers\Api\V1;
 
-use App\\Services\\VedicPanchang\\Cities\\CityRepository;
-use App\\Services\\VedicPanchang\\DailyPanchangCalculator;
+use App\Services\VedicPanchang\Cities\CityRepository;
+use App\Services\VedicPanchang\DailyPanchangCalculator;
 use DateTimeImmutable;
 use DateTimeZone;
-use Illuminate\\Http\\JsonResponse;
-use Illuminate\\Http\\Request;
-use Illuminate\\Validation\\ValidationException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use RuntimeException;
 use Throwable;
 
