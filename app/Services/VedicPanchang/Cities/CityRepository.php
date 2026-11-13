@@ -1,8 +1,8 @@
 <?php
 
-namespace App\\Services\\VedicPanchang\\Cities;
+namespace App\Services\VedicPanchang\Cities;
 
-use Illuminate\\Support\\Str;
+use Illuminate\Support\Str;
 use RuntimeException;
 
 final class CityRepository
