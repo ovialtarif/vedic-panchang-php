@@ -22,8 +22,8 @@ final class PanchangMathTest extends TestCase
 
         self::assertSame(2, $result['number']);
         self::assertSame('shukla', $result['paksha']);
-        self::assertSame('Dvitiya', $result['name']);
-        self::assertSame('shukla-dvitiya', $result['id']);
+        self::assertSame('Dwitiya', $result['name']);
+        self::assertSame('shukla-dwitiya', $result['id']);
     }
 
     #[Test]
