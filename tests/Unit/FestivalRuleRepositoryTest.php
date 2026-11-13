@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Services\VedicPanchang\Festivals\FestivalRuleRepository;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 final class FestivalRuleRepositoryTest extends TestCase
 {
