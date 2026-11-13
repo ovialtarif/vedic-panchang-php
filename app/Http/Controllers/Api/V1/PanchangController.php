@@ -1,17 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\\Http\\Controllers\\Api\\V1;
 
-use App\Services\VedicPanchang\DailyPanchangCalculator;
+use App\\Services\\VedicPanchang\\Cities\\CityRepository;
+use App\\Services\\VedicPanchang\\DailyPanchangCalculator;
 use DateTimeImmutable;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
+use DateTimeZone;
+use Illuminate\\Http\\JsonResponse;
+use Illuminate\\Http\\Request;
+use Illuminate\\Validation\\ValidationException;
+use RuntimeException;
 use Throwable;
 
 final class PanchangController
 {
-    public function daily(Request $request, DailyPanchangCalculator $calculator): JsonResponse
+    public function daily(Request $request, DailyPanchangCalculator $calculator, CityRepository $cities): JsonResponse
     {
         $validated = $request->validate([
             'date' => ['sometimes', 'date_format:Y-m-d'],
@@ -24,42 +27,46 @@ final class PanchangController
         ]);
 
         if (isset($validated['city_id']) && $request->hasAny(['lat', 'lon', 'tz'])) {
-            throw ValidationException::withMessages([
-                'city_id' => 'Use either city_id or coordinates, not both.',
-            ]);
+            throw ValidationException::withMessages(['city_id' => 'Use either city_id or coordinates, not both.']);
         }
 
         if (isset($validated['city_id'])) {
-            return $this->enginePending('daily-city', $validated);
+            try {
+                $city = $cities->find($validated['city_id']);
+            } catch (RuntimeException $exception) {
+                report($exception);
+                return $this->catalogueUnavailable();
+            }
+
+            if ($city === null) {
+                return response()->json(['error' => ['code' => 'city_not_found', 'message' => 'The requested city ID does not exist.']], 404);
+            }
+
+            $validated['lat'] = $city['latitude'];
+            $validated['lon'] = $city['longitude'];
+            $validated['tz'] = $city['timezone'] ?: 'UTC';
+            $validated['alt'] = $city['elevation_m'] ?? 0;
         }
 
         $timezone = $validated['tz'];
-        $date = $validated['date'] ?? (new DateTimeImmutable('now', new \DateTimeZone($timezone)))->format('Y-m-d');
+        $date = $validated['date'] ?? (new DateTimeImmutable('now', new DateTimeZone($timezone)))->format('Y-m-d');
 
         try {
-            $data = $calculator->calculate(
-                $date,
-                [
-                    'latitude' => (float) $validated['lat'],
-                    'longitude' => (float) $validated['lon'],
-                    'altitude_m' => (float) ($validated['alt'] ?? 0.0),
-                ],
-                $timezone,
-                $validated['profile'] ?? 'north-indian-smarta',
-            );
+            $data = $calculator->calculate($date, [
+                'latitude' => (float) $validated['lat'],
+                'longitude' => (float) $validated['lon'],
+                'altitude_m' => (float) ($validated['alt'] ?? 0.0),
+            ], $timezone, $validated['profile'] ?? 'north-indian-smarta');
 
             return response()->json(['data' => $data]);
         } catch (ValidationException $exception) {
             throw $exception;
         } catch (Throwable $exception) {
             report($exception);
-
-            return response()->json([
-                'error' => [
-                    'code' => 'panchang_calculation_failed',
-                    'message' => 'The Panchang calculation could not be completed for this date and location.',
-                ],
-            ], 422);
+            return response()->json(['error' => [
+                'code' => 'panchang_calculation_failed',
+                'message' => 'The Panchang calculation could not be completed for this date and location.',
+            ]], 422);
         }
     }
 
@@ -71,7 +78,6 @@ final class PanchangController
             'month' => ['required', 'integer', 'between:1,12'],
             'profile' => ['sometimes', 'string', 'in:north-indian-smarta'],
         ]);
-
         return $this->enginePending('month', $validated);
     }
 
@@ -83,7 +89,6 @@ final class PanchangController
             'category' => ['sometimes', 'string', 'in:major'],
             'profile' => ['sometimes', 'string', 'in:north-indian-smarta'],
         ]);
-
         return $this->enginePending('festivals', $validated);
     }
 
@@ -94,33 +99,60 @@ final class PanchangController
             'year' => ['required', 'integer', 'between:2020,2035'],
             'profile' => ['sometimes', 'string', 'in:north-indian-smarta'],
         ]);
-
         return $this->enginePending('festival', ['festival' => $festival] + $validated);
     }
 
-    public function cities(Request $request): JsonResponse
+    public function cities(Request $request, CityRepository $cities): JsonResponse
     {
         $validated = $request->validate([
             'q' => ['sometimes', 'string', 'max:120'],
             'country' => ['sometimes', 'string', 'size:2'],
+            'limit' => ['sometimes', 'integer', 'between:1,100'],
         ]);
 
-        return $this->enginePending('cities', $validated);
+        try {
+            return response()->json(['data' => $cities->search($validated['q'] ?? '', $validated['country'] ?? null, (int) ($validated['limit'] ?? 20))]);
+        } catch (RuntimeException $exception) {
+            report($exception);
+            return $this->catalogueUnavailable();
+        }
     }
 
-    public function nearestCity(Request $request): JsonResponse
+    public function nearestCity(Request $request, CityRepository $cities): JsonResponse
     {
         $validated = $request->validate([
             'lat' => ['required', 'numeric', 'between:-90,90'],
             'lon' => ['required', 'numeric', 'between:-180,180'],
         ]);
 
-        return $this->enginePending('nearest-city', $validated);
+        try {
+            return response()->json(['data' => $cities->nearest((float) $validated['lat'], (float) $validated['lon'])]);
+        } catch (RuntimeException $exception) {
+            report($exception);
+            return $this->catalogueUnavailable();
+        }
     }
 
-    public function city(string $city): JsonResponse
+    public function city(string $city, CityRepository $cities): JsonResponse
     {
-        return $this->enginePending('city', ['city_id' => $city]);
+        try {
+            $result = $cities->find($city);
+        } catch (RuntimeException $exception) {
+            report($exception);
+            return $this->catalogueUnavailable();
+        }
+
+        return $result === null
+            ? response()->json(['error' => ['code' => 'city_not_found', 'message' => 'The requested city ID does not exist.']], 404)
+            : response()->json(['data' => $result]);
+    }
+
+    private function catalogueUnavailable(): JsonResponse
+    {
+        return response()->json(['error' => [
+            'code' => 'city_catalogue_unavailable',
+            'message' => 'The city catalogue is not installed. Import the GeoNames cities dataset to enable city lookup.',
+        ]], 503);
     }
 
     private function enginePending(string $operation, array $context): JsonResponse
