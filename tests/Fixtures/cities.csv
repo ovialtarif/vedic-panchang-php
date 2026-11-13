@@ -1,5 +1,5 @@
 id,name,ascii_name,region,region_code,country_code,country,latitude,longitude,elevation_m,timezone,population
-1275339,Dhaka,Dhaka,Dhaka Division,81,BD,Bangladesh,23.7104,90.4074,4,Asia/Dhaka,10356500
+1275339,Dhaka,Dhaka,Dhaka Division,81,BD,Bangladesh,23.8103,90.4125,4,Asia/Dhaka,10356500
 1185098,Thakurgaon,Thakurgaon,Rangpur Division,85,BD,Bangladesh,26.0333,88.4667,37,Asia/Dhaka,100000
-1185241,Rajshahi,Rajshahi,Rajshahi Division,83,BD,Bangladesh,24.3667,88.6000,23,Asia/Dhaka,763580
-1185241,Kolkata,Kolkata,West Bengal,WB,IN,India,22.5726,88.3639,9,Asia/Kolkata,4496694
+1185128,Rajshahi,Rajshahi,Rajshahi Division,83,BD,Bangladesh,24.3667,88.6000,23,Asia/Dhaka,763580
+1275004,Kolkata,Kolkata,West Bengal,WB,IN,India,22.5726,88.3639,9,Asia/Kolkata,4496694
