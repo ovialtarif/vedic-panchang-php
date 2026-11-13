@@ -70,15 +70,72 @@ final class PanchangController
         }
     }
 
-    public function month(Request $request): JsonResponse
-    {
+    public function month(
+        Request $request,
+        DailyPanchangCalculator $calculator,
+        CityRepository $cities,
+    ): JsonResponse {
         $validated = $request->validate([
             'city_id' => ['required', 'string', 'max:32'],
-            'year' => ['required', 'integer', 'between:2020,2035'],
+            'year' => ['required', 'integer', 'between:1900,2100'],
             'month' => ['required', 'integer', 'between:1,12'],
             'profile' => ['sometimes', 'string', 'in:north-indian-smarta'],
         ]);
-        return $this->enginePending('month', $validated);
+
+        try {
+            $city = $cities->find($validated['city_id']);
+        } catch (RuntimeException $exception) {
+            report($exception);
+            return $this->catalogueUnavailable();
+        }
+
+        if ($city === null) {
+            return response()->json([
+                'error' => ['code' => 'city_not_found', 'message' => 'The requested city ID does not exist.'],
+            ], 404);
+        }
+
+        $timezone = (string) ($city['timezone'] ?: 'UTC');
+        $year = (int) $validated['year'];
+        $month = (int) $validated['month'];
+        $firstDay = new DateTimeImmutable(sprintf('%04d-%02d-01', $year, $month), new DateTimeZone($timezone));
+        $daysInMonth = (int) $firstDay->modify('last day of this month')->format('j');
+        $profile = $validated['profile'] ?? 'north-indian-smarta';
+        $days = [];
+
+        try {
+            for ($day = 1; $day <= $daysInMonth; $day++) {
+                $date = sprintf('%04d-%02d-%02d', $year, $month, $day);
+                $days[] = $calculator->calculate($date, [
+                    'latitude' => (float) $city['latitude'],
+                    'longitude' => (float) $city['longitude'],
+                    'altitude_m' => (float) ($city['elevation_m'] ?? 0.0),
+                ], $timezone, $profile);
+            }
+        } catch (Throwable $exception) {
+            report($exception);
+            return response()->json([
+                'error' => [
+                    'code' => 'month_calculation_failed',
+                    'message' => 'The complete month could not be calculated. No partial calendar was returned.',
+                ],
+            ], 422);
+        }
+
+        return response()->json(['data' => [
+            'year' => $year,
+            'month' => $month,
+            'city' => [
+                'id' => $city['id'],
+                'name' => $city['name'],
+                'country_code' => $city['country_code'] ?? null,
+                'timezone' => $timezone,
+                'latitude' => (float) $city['latitude'],
+                'longitude' => (float) $city['longitude'],
+            ],
+            'profile' => $profile,
+            'days' => $days,
+        ]]);
     }
 
     public function festivals(Request $request): JsonResponse
