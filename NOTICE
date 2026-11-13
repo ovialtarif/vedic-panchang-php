@@ -7,9 +7,10 @@ This software includes or depends on:
 - Swiss Ephemeris, Copyright (C) Astrodienst AG, Switzerland, used under the GNU Affero
   General Public License through the pyswisseph Python bindings.
 
-- City data (src/vedic_panchang/infra/data/cities.csv) derived from GeoNames
-  (https://www.geonames.org), licensed under Creative Commons Attribution 4.0
-  (https://creativecommons.org/licenses/by/4.0/). Changes: filtered by country, minimum
-  population and feature type; columns selected; region and country names joined.
+- City data generated from GeoNames (https://www.geonames.org), specifically the
+  cities5000 dataset, licensed under Creative Commons Attribution 4.0
+  (https://creativecommons.org/licenses/by/4.0/). The PHP generator joins country and
+  administrative-region names and selects the fields used by this application.
+  Attribution: GeoNames (https://www.geonames.org).
 
 - IANA Time Zone Database via the tzdata package (public domain).
